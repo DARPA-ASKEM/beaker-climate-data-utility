@@ -1,4 +1,4 @@
-FROM ghcr.io/darpa-askem/beaker-kernel:latest
+FROM python:3.10
 
 USER root
 
@@ -18,10 +18,11 @@ COPY --chown=1000:1000 . /elwood_context/
 
 RUN pip install hatch
 
+RUN useradd -m jupyter
 USER jupyter
 RUN pip install .
 
 
 
 WORKDIR /jupyter
-CMD ["python", "/jupyter/service/dev.py", "--ip", "0.0.0.0", "-y"]
+CMD ["python", "-m", "beaker_kernel.server.main", "--ip", "0.0.0.0"]

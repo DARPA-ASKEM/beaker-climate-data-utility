@@ -51,18 +51,18 @@ def open_dataset(filepath):
 dataframe = open_dataset(f"{{filepath}}")
 geo_columns = {{geo_columns}}
 time_column = f"{{time_column}}"
-scale_multiplier = {{scale_multiplier}}
+time_bucket = f"{{time_bucket}}"
 aggregation_functions = {{aggregation_functions}}
 
 if dataframe is None:
     raise AssertionError("The dataframe could not be created.")
 
-regridded_frame = elwood.regrid_dataframe_geo(
+rescaled_frame = elwood.rescale_dataframe_time(
     dataframe=dataframe,
     geo_columns=geo_columns,
     time_column=time_column,
-    scale_multi=scale_multiplier,
+    time_bucket=time_bucket,
     aggregation_functions=aggregation_functions,
 )
 
-regridded_frame
+rescaled_frame

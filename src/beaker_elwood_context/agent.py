@@ -1,6 +1,9 @@
 import json
 import logging
 import re
+from typing import Optional
+
+import pandas
 
 from archytas.react import Undefined
 from archytas.tool_utils import AgentRef, LoopControllerRef, is_tool, tool, toolset
@@ -126,30 +129,33 @@ class ElwoodToolset:
 
     get_available_functions.__doc__
 
-    @tool()
-    async def open_dataset_as_dataframe(filepath: str, agent: AgentRef) -> None:
-        """
-        This function should be used to open a dataset as a dataframe.
+    # @tool()
+    # async def open_dataset_as_dataframe(self, filepath: str, agent: AgentRef) -> pandas.DataFrame:
+    #     """
+    #     This function should be used to open a dataset as a dataframe.
 
-        You should use the filepath provided to open the dataset.
+    #     Filepath should be a proper string.
 
-        Args:
-            filepath (str): The filepath to the dataset to open.
-        """
-        code = agent.context.get_code(
-            "elwood_open_dataset_as_dataframe",
-            {
-                "filepath": filepath,
-            },
-        )
-        result = await agent.context.beaker_kernel.evaluate(
-            code,
-            parent_header={},
-        )
+    #     Args:
+    #         filepath (str): The filepath to the dataset to open.
 
-        dataframe = result.get("return")
+    #     Returns:
+    #         DataFrame: The dataset as a dataframe.
+    #     """
+    #     code = agent.context.get_code(
+    #         "elwood_open_dataset_as_dataframe",
+    #         {
+    #             "filepath": filepath,
+    #         },
+    #     )
+    #     result = await agent.context.beaker_kernel.evaluate(
+    #         code,
+    #         parent_header={},
+    #     )
 
-        return dataframe
+    #     dataframe = result.get("return")
+
+    #     return dataframe
 
     @tool()
     async def get_boundary_box(self, dataframe: str, geo_columns: object, agent: AgentRef) -> None:
@@ -188,7 +194,7 @@ class ElwoodToolset:
     @tool()
     async def regrid_geo_temporal_dataset(
         self,
-        dataframe: str,
+        filepath: str,
         geo_columns: object,
         time_column: str,
         scale_multiplier: float,
@@ -216,7 +222,7 @@ class ElwoodToolset:
         Finally, you need one (or a list) of aggregations functions to use for the data in the dataset.
 
         Args:
-            dataframe (str): The name of the dataframe to regrid.
+            filepath (str): The filepath to the dataset to open.
             geo_columns (object): The names of the geographical columns in the dataset.
                 This is an object with the keys 'lat_column' and 'lon_column'.
                 The 'lat_column' key should have the name of the latitude column and the 'lon_column' key should have the name of the longitude column.
@@ -226,12 +232,14 @@ class ElwoodToolset:
 
         Returns:
             str: The name of the regridded dataframe.
+
+        At the end of this operation, show the user the complete dataframe with the regridded data in the notebook environment by calling print(regridded_dataframe).
         """
 
         code = agent.context.get_code(
             "elwood_regridding",
             {
-                "dataframe": dataframe,
+                "filepath": filepath,
                 "geo_columns": geo_columns,
                 "time_column": time_column,
                 "scale_multiplier": scale_multiplier,
@@ -248,6 +256,72 @@ class ElwoodToolset:
         return regridded_dataframe
 
     regrid_geo_temporal_dataset.__doc__
+
+    @tool()
+    async def rescale_temporal_dataset(
+        self,
+        filepath: str,
+        time_column: str,
+        time_bucket: str,
+        aggregation_functions: list,
+        agent: AgentRef,
+        geo_columns: Optional[object] = None,
+    ) -> str:
+        """
+        This function should be used to rescale the temporal resolution of a dataset with a temporal data column.
+
+        You are expected to have a dataframe with geographical data in it.
+
+        You optionally need to know the names of the geographical columns in the dataset. The result will be better if you know it.
+
+        You should put these columns into an object as follows:
+
+        {
+            "lat_column": <latitude column name>,
+            "lon_column": <longitude column name>
+        }
+
+        You also need to know the name of the time column in the dataset.
+
+        You need to know a time bucket to use for the rescaling operation.
+
+        Finally, you need one (or a list) of aggregations functions to use for the data in the dataset.
+
+        Args:
+            filepath (str): The filepath to the dataset to open.
+            geo_columns (Optional): The names of the geographical columns in the dataset. This is an optional argument for this tool.
+                This is an object with the keys 'lat_column' and 'lon_column'.
+                The 'lat_column' key should have the name of the latitude column and the 'lon_column' key should have the name of the longitude column.
+            time_column (str): The name of the targeted time column in the dataset.
+            time_bucket (str): Some time bucketing rule to lump the time in to. ex. 'M', 'A', '2H'
+            aggregation_functions (list): The aggregation functions to use for the data in the dataset. This is a list containing strings of the aggregation functions to use.
+
+        Returns:
+            str: The name of the regridded dataframe.
+
+        At the end of this operation, show the user the complete dataframe with the rescaled data in the notebook environment by calling print(rescaled_frame).
+        """
+
+        code = agent.context.get_code(
+            "elwood_rescaling",
+            {
+                "filepath": filepath,
+                "geo_columns": geo_columns,
+                "time_column": time_column,
+                "time_bucket": time_bucket,
+                "aggregation_functions": aggregation_functions,
+            },
+        )
+        result = await agent.context.beaker_kernel.evaluate(
+            code,
+            parent_header={},
+        )
+
+        rescaled_frame = result.get("return")
+
+        return rescaled_frame
+
+    rescale_temporal_dataset.__doc__
 
 
 class ElwoodAgent(BaseAgent):

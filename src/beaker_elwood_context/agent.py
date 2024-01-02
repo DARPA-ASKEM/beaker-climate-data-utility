@@ -192,6 +192,82 @@ class ElwoodToolset:
     get_boundary_box.__doc__
 
     @tool()
+    async def clip_dataframe_time(self, filepath: str, time_column: str, time_ranges: list, agent: AgentRef) -> str:
+        """This function should be used to clip data in a dataframe based on time ranges.
+
+        You need to know the name of the time column in the dataset.
+
+        You need to know the time range to clip the data to.
+
+        Args:
+            filepath (str): The filepath to the dataset to open.
+            time_column (str): Name of target time column
+            time_ranges (list): List of dictionaries containing "start" and "end" datetime values
+
+        Returns:
+            str: The name of the clipped dataframe.
+
+        At the end of this operation, show the user the complete dataframe with the clipped data in the notebook environment by calling print(clipped_dataframe).
+        """
+
+        code = agent.context.get_code(
+            "elwood_clip_time",
+            {
+                "filepath": filepath,
+                "time_column": time_column,
+                "time_ranges": time_ranges,
+            },
+        )
+        result = await agent.context.beaker_kernel.evaluate(
+            code,
+            parent_header={},
+        )
+
+        clipped_dataframe = result.get("return")
+
+        return clipped_dataframe
+
+    @tool()
+    async def clip_dataframe_geo(self, filepath: str, geo_columns: object, polygons_list: list, agent: AgentRef) -> str:
+        """
+        This function should be used to clip geographical data in a dataframe based on polygon shapes.
+
+        You are expected to have a dataframe with geographical data in it.
+
+        You need to know the names of the geographical columns in the dataset.
+
+        You need to know the polygon shapes to clip the data to.
+
+        Args:
+            filepath (str): The filepath to the dataset to open.
+            geo_columns (object): The names of the geographical columns in the dataset.
+                This is an object with the keys 'lat_column' and 'lon_column'.
+                The 'lat_column' key should have the name of the latitude column and the 'lon_column' key should have the name of the longitude column.
+            polygons_list (list): A list of polygons to clip the data to. Each polygon is a list of coordinates.
+                Each coordinate is a object of latitude and longitude. ex. [[{"lat": 1, "lng": 2}, {"lat": 3, "lng": 4}, {"lat": 5, "lng": 6}]].
+
+        Returns:
+            str: The name of the clipped dataframe.
+        """
+
+        code = agent.context.get_code(
+            "elwood_clip_geo",
+            {
+                "filepath": filepath,
+                "geo_columns": geo_columns,
+                "polygons_list": polygons_list,
+            },
+        )
+        result = await agent.context.beaker_kernel.evaluate(
+            code,
+            parent_header={},
+        )
+
+        clipped_dataframe = result.get("return")
+
+        return clipped_dataframe
+
+    @tool()
     async def regrid_geo_temporal_dataset(
         self,
         filepath: str,

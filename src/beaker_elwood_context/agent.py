@@ -104,11 +104,14 @@ class ElwoodToolset:
 
         This function will return an object and store it into self.elwood_functions. The object will be a dictionary with the following structure:
         {
-           function_name: <function docstring>,
+           <function_name>: <function docstring>,
+           <function_2_name>: <function_2 docstring>,
            ...
         }
 
-        Read the docstrings to learn how to use the functions and which arguments they take.
+        Read the docstrings to learn how to use the functions.
+
+        Before you generate any code with the function, you must identify how the function works and what arguments it needs.
         """
         functions = {}
         code = agent.context.get_code("elwood_info")

@@ -22,8 +22,11 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
+#  "beaker-kernel@https://github.com/jataware/beaker-kernel/archive/feature/auto-reload-on-filechange.zip",
   "beaker-kernel~=1.2.3",
   "elwood==0.1.4",
+  "flowcast~=0.2.6",
+  "basemap~=1.4.0",
 ]
 
 [tool.hatch.metadata]
@@ -41,6 +44,7 @@ allow-direct-references = true
 # Copies the files created in the custom action
 [tool.hatch.build.targets.wheel.shared-data]
 "context.json" = "share/beaker/contexts/elwood.json"
+
 
 [project.urls]
 Documentation = "https://github.com/unknown/beaker-kernel#readme"

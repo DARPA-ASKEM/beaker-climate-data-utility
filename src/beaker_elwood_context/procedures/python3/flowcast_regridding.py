@@ -4,32 +4,33 @@ from flowcast.regrid import regrid_1d
 import io
 
 
-def load_dataset(filepath: str) -> xr.Dataset:
+def load_dataset(dataset) -> xr.Dataset:
     """
     Load the dataset from the given filepath.
 
     Args:
-        filepath (str): The filepath of the dataset to load.
+        dataset (bytes or xarray.Dataset): The dataset to regrid.
 
     Returns:
         xr.Dataset: The loaded dataset.
     """
-    # Load the dataset using xarray
-    dataset = xr.open_dataset(filepath)
+    if isinstance(dataset, bytes):
+        # Load the dataset using xarray
+        dataset = xr.open_dataset(dataset)
 
     return dataset
 
 
-def regrid_dataset(filepath: str, target_resolution: tuple):
+def regrid_dataset(dataset, target_resolution: tuple):
     """
     Regrid the dataset at the given filepath to the given target resolution.
 
     Args:
-        filepath (str): The filepath of the dataset to regrid.
+        dataset (bytes or xarray.Dataset): The dataset to regrid.
         target_resolution (tuple): The target resolution to regrid to, e.g. (0.5, 0.5).
     """
     # Load the dataset
-    dataset = load_dataset(filepath)
+    dataset = load_dataset(dataset)
 
     # Calculate the spacing between consecutive latitude and longitude values
     lat_spacing = dataset.lat.values[1] - dataset.lat.values[0]
@@ -67,4 +68,4 @@ def regrid_dataset(filepath: str, target_resolution: tuple):
     return regridded_dataset
 
 
-regrid_dataset(f"{{filepath}}", {{target_resolution}})
+regrid_dataset({{dataset}}, {{target_resolution}})

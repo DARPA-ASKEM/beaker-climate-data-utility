@@ -16,12 +16,12 @@ COPY --chown=1000:1000 . /elwood_context/
 
 # Separate numpy install is a prerequisite for GDAL
 RUN pip install numpy==1.24.3 && \ 
-    pip install hatch
+    pip install --no-cache-dir hatch
 
 
 RUN useradd -m jupyter
 USER jupyter
-RUN pip install .
+RUN pip install --no-cache-dir .
 
 WORKDIR /jupyter
 CMD ["python", "-m", "beaker_kernel.server.main", "--ip", "0.0.0.0"]

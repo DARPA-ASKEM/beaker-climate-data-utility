@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "beaker_climate_data_utility_context"
+name = "beaker_climate_data_utility"
 version = "1.0.0"
 description = ""
 readme = "README.md"
@@ -41,6 +41,9 @@ allow-direct-references = true
 
 # Used to call hatch_build.py
 # [tool.hatch.build.hooks.custom]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/climate_data_utility"]
 
 # Copies the files created in the custom action
 [tool.hatch.build.targets.wheel.shared-data]

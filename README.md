@@ -6,10 +6,12 @@ Beaker Climate Data Operators is a Beaker module designed to handle geographical
 
 To use Beaker Climate Data Operators, follow these steps:
 
-1. Navigate to the project directory: `cd beaker-climate-data-operators`
+1. Navigate to the project directory: `cd beaker-climate-data-utility`
 2. Create a `.env` file and fill it out with the necessary environment variables. Refer to the `envfile.sample` file for the required variables.
 3. Launch the container using Docker Compose: `docker-compose up -d`
 4. Access the Beaker Climate Data Operations application at `http://localhost:8888/dev_ui?`
+
+You can view the logs with `docker logs -f beaker-climate-data-utility-context-jupyter-1`
 
 ## Usage
 

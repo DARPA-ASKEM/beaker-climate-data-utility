@@ -1,5 +1,5 @@
 {
     "slug": "beaker_climate_data_utility",
-    "package": "beaker_climate_data_utility_context.context",
+    "package": "climate_data_utility.context",
     "class_name": "ClimateDataUtilityContext"
 }

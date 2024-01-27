@@ -23,7 +23,7 @@ classifiers = [
 ]
 dependencies = [
 #  "beaker-kernel@https://github.com/jataware/beaker-kernel/archive/feature/auto-reload-on-filechange.zip",
-  "beaker-kernel==1.2.4",
+  "beaker-kernel==1.2.5",
   "archytas==1.1.4",
   "elwood==0.1.4",
   "flowcast~=0.2.6",

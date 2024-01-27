@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "beaker_elwood_context"
+name = "beaker_climate_data_utility"
 version = "1.0.0"
 description = ""
 readme = "README.md"
@@ -23,7 +23,8 @@ classifiers = [
 ]
 dependencies = [
 #  "beaker-kernel@https://github.com/jataware/beaker-kernel/archive/feature/auto-reload-on-filechange.zip",
-  "beaker-kernel~=1.2.3",
+  "beaker-kernel==1.2.5",
+  "archytas==1.1.4",
   "elwood==0.1.4",
   "flowcast~=0.2.6",
   "basemap~=1.4.0",
@@ -41,9 +42,12 @@ allow-direct-references = true
 # Used to call hatch_build.py
 # [tool.hatch.build.hooks.custom]
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/climate_data_utility"]
+
 # Copies the files created in the custom action
 [tool.hatch.build.targets.wheel.shared-data]
-"context.json" = "share/beaker/contexts/elwood.json"
+"context.json" = "share/beaker/contexts/climate_data_utility.json"
 
 
 [project.urls]

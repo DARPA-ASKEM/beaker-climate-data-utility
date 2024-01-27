@@ -17,8 +17,10 @@ services:
       - OPENAI_API_KEY
       - HMI_SERVER
       - BASIC_AUTH_TOKEN
+      - HMI_SERVER_USER
+      - HMI_SERVER_PASSWORD
     volumes:
-      - .:/elwood_context
+      - .:/climate_data_utility_context
       # - ./beaker_kernel:/usr/local/share/jupyter/kernels/beaker_kernel
       # - .:/jupyter
     command: [ "python", "-m", "beaker_kernel.server.dev", "watch" ]

@@ -35,21 +35,25 @@ payload["dataSourceDate"] = current_datetime
 hmi_server = os.getenv("HMI_SERVER")
 auth_token = os.getenv("BASIC_AUTH_TOKEN")
 
+# Set the username and password
+username = os.getenv("HMI_SERVER_USER")
+password = os.getenv("HMI_SERVER_PASSWORD")
+
 # Set the headers
 headers = {
     "accept": "application/json",
-    "Authorization": f"Basic {auth_token}",
     "Content-Type": "application/json",
 }
 
-# Send the POST request
-response = requests.post(hmi_server, json=payload, headers=headers)
+# Send the POST request with basic authentication
+create_url = f"{hmi_server}/datasets"
+response = requests.post(create_url, json=payload, headers=headers, auth=(username, password))
 
 # Check the response status code
-if response.status_code == 200:
+if response.status_code < 300:
     message = response.json()
 else:
-    message = f'File upload failed with status code {response.status_code}.'
+    message = f'Dataset creation failed with status code {response.status_code}.'
     if response.text:
         message += f' Response message: {response.text}'
 

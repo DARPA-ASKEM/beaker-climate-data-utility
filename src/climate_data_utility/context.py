@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any, Dict
 from beaker_kernel.lib.context import BaseContext
 from beaker_kernel.lib.subkernels.python import PythonSubkernel
 
-from .agent import ElwoodAgent
+from .agent import ClimateDataUtilityAgent
 
 if TYPE_CHECKING:
     from beaker_kernel.kernel import LLMKernel
@@ -11,9 +11,9 @@ if TYPE_CHECKING:
     from beaker_kernel.lib.subkernels.base import BaseSubkernel
 
 
-class ElwoodContext(BaseContext):
-    slug = "elwood"
-    agent_cls: "BaseAgent" = ElwoodAgent
+class ClimateDataUtilityContext(BaseContext):
+    slug = "climate_data_utility"
+    agent_cls: "BaseAgent" = ClimateDataUtilityAgent
 
     def __init__(
         self,
@@ -23,7 +23,7 @@ class ElwoodContext(BaseContext):
     ) -> None:
         if not isinstance(subkernel, PythonSubkernel):
             raise ValueError("This context is only valid for Python.")
-        self.elwood__functions = {}
+        self.climate_data_utility__functions = {}
         self.config = config
         super().__init__(beaker_kernel, subkernel, self.agent_cls, config)
 

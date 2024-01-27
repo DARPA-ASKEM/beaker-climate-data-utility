@@ -10,9 +10,9 @@ RUN apt-get update &&\
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
 ENV C_INCLUDE_PATH=/usr/include/gdal
 
-WORKDIR /elwood_context
+WORKDIR /climate_data_utility_context
 
-COPY --chown=1000:1000 . /elwood_context/
+COPY --chown=1000:1000 . /climate_data_utility_context/
 
 # Separate numpy install is a prerequisite for GDAL
 RUN pip install numpy==1.24.3 && \ 

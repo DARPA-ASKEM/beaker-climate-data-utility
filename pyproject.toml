@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "beaker_elwood_context"
+name = "beaker_climate_data_utility_context"
 version = "1.0.0"
 description = ""
 readme = "README.md"
@@ -44,7 +44,7 @@ allow-direct-references = true
 
 # Copies the files created in the custom action
 [tool.hatch.build.targets.wheel.shared-data]
-"context.json" = "share/beaker/contexts/elwood.json"
+"context.json" = "share/beaker/contexts/climate_data_utility.json"
 
 
 [project.urls]

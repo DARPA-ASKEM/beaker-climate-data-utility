@@ -1,5 +1,5 @@
 {
-    "slug": "beaker_elwood",
-    "package": "beaker_elwood_context.context",
-    "class_name": "ElwoodContext"
+    "slug": "beaker_climate_data_utility",
+    "package": "beaker_climate_data_utility_context.context",
+    "class_name": "ClimateDataUtilityContext"
 }

@@ -19,8 +19,8 @@ logger = logging.getLogger(__name__)
 
 
 @toolset()
-class ElwoodToolset:
-    """Toolset for Elwood context"""
+class ClimateDataUtilityToolset:
+    """Toolset for ClimateDataUtility context"""
 
     @tool()
     async def detect_resolution(self, filepath: str, geo_columns: object, agent: AgentRef) -> str:
@@ -242,7 +242,7 @@ class ElwoodToolset:
         return result
 
 
-class ElwoodAgent(BaseAgent):
+class ClimateDataUtilityAgent(BaseAgent):
     """
     You are assisting us in modifying geo-temporal datasets.
 
@@ -253,5 +253,5 @@ class ElwoodAgent(BaseAgent):
     """
 
     def __init__(self, context: BaseContext = None, tools: list = None, **kwargs):
-        tools = [ElwoodToolset]
+        tools = [ClimateDataUtilityToolset]
         super().__init__(context, tools, **kwargs)

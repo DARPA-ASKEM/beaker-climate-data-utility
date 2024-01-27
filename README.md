@@ -1,4 +1,4 @@
-# Beaker Climate Data Operators
+# Beaker Climate Data Utility
 
 Beaker Climate Data Operators is a Beaker module designed to handle geographical/climate data. It provides a set of tools for detecting the resolution of a dataset, which can be particularly useful when regridding a dataset or when the resolution is unknown.
 

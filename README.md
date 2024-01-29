@@ -11,7 +11,7 @@ To use Beaker Climate Data Utility, follow these steps:
 3. Launch the container using Docker Compose: `docker-compose up -d`
 4. Access the Beaker Climate Data Utility application at `http://localhost:8888/dev_ui?`
 
-You can view the logs with `docker logs -f beaker-climate-data-utility-context-jupyter-1`
+You can view the logs with `docker logs -f beaker-climate-data-utility-jupyter-1`
 
 ## Usage
 

@@ -16,12 +16,13 @@ COPY --chown=1000:1000 . /climate_data_utility_context/
 
 # Separate numpy install is a prerequisite for GDAL
 RUN pip install numpy==1.24.3 && \ 
-    pip install --no-cache-dir hatch
+    pip install hatch
 
 
 RUN useradd -m jupyter
 USER jupyter
-RUN pip install --no-cache-dir .
+RUN pip install .
 
 WORKDIR /jupyter
+COPY --chown=1000:1000 default.ipynb /jupyter/
 CMD ["python", "-m", "beaker_kernel.server.main", "--ip", "0.0.0.0"]

@@ -62,8 +62,18 @@ def regrid_dataset(dataset, target_resolution: tuple):
     new_data = regrid_1d(dataset.to_array(), lats, 'lat')
     new_data = regrid_1d(new_data, lons, 'lon')
 
-    # Create a new dataset with the regridded data
-    regridded_dataset = new_data.to_netcdf()
+    regridded_dataset = new_data.to_dataset(dim='variable')
+
+    # Persist attributes after regridding.
+    # Copy attributes from source variables
+    for var_name, var in dataset.variables.items():
+        if var_name in regridded_dataset.variables:
+            regridded_dataset[var_name].attrs.update(var.attrs)
+
+    # Copy attributes from source coordinates
+    for coord_name, coord in dataset.coords.items():
+        if coord_name in regridded_dataset.coords:
+            regridded_dataset[coord_name].attrs.update(coord.attrs)
 
     return regridded_dataset
 

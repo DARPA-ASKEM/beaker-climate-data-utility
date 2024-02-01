@@ -3,6 +3,11 @@ import requests
 
 from json import JSONDecodeError
 
+import logging
+
+
+logger = logging.getLogger(__name__)
+
 # Get the HMI_SERVER endpoint from the environment variable
 hmi_server = os.getenv('HMI_SERVER')
 auth_token = os.getenv('BASIC_AUTH_TOKEN')
@@ -20,14 +25,19 @@ url = f'{hmi_server}/datasets/{id}/download-file?filename={{filename}}'
 # Make the HTTP GET request to retrieve the dataset
 response = requests.get(url, auth=(username, password))
 
+logger.error(f"response: {response}")
+
 # Check the response status code
-if response.status_code == 200:
-    message = f'Dataset retrieved successfully with status code {response.status_code}. Use the variable "dataset" to access the raw data bytes.'
+if response.status_code <= 300:
+    message = f'Dataset retrieved successfully with status code {response.status_code}.'
+    response.content
 else:
     message = f'Dataset retrieval failed with status code {response.status_code}.'
     if response.text:
         message += f' Response message: {response.text}'
+    message
+
 
 dataset = response.content
 
-message
+dataset

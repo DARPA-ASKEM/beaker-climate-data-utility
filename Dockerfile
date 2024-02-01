@@ -21,7 +21,7 @@ RUN pip install numpy==1.24.3 && \
 
 RUN useradd -m jupyter
 USER jupyter
-RUN pip install .
+RUN pip install -e .
 
 WORKDIR /jupyter
 COPY --chown=1000:1000 default.ipynb /jupyter/

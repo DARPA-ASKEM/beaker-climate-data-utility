@@ -59,8 +59,8 @@ def regrid_dataset(dataset, target_resolution: tuple):
     data_vars = [var for var in dataset.variables if var not in dataset.dims]
 
     # Regrid the dataset
-    new_data = regrid_1d(dataset.to_array(), lats, 'lat')
-    new_data = regrid_1d(new_data, lons, 'lon')
+    new_data = regrid_1d(dataset.to_array(), lats, 'lat', aggregation={{aggregation}})
+    new_data = regrid_1d(new_data, lons, 'lon', aggregation={{aggregation}})
 
     regridded_dataset = new_data.to_dataset(dim='variable')
 

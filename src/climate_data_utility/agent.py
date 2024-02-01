@@ -66,6 +66,7 @@ class ClimateDataUtilityToolset:
         target_resolution: tuple,
         agent: AgentRef,
         loop: LoopControllerRef,
+        aggregation: Optional[str] = "interp_or_mean",
     ) -> str:
         """
         This tool should be used to show the user code to regrid a netcdf dataset with detectable geo-resolution.
@@ -74,9 +75,20 @@ class ClimateDataUtilityToolset:
 
         If you are given a netcdf dataset, use this tool instead of any other regridding tool.
 
+        If you are asked about what is needed to regrid a dataset, please provide information about the arguments of this tool.
+
         Args:
             dataset (str): The name of the dataset instantiated in the jupyter notebook.
             target_resolution (tuple): The target resolution to regrid to, e.g. (0.5, 0.5). This is in degrees longitude and latitude.
+            aggregation (Optional): The aggregation function to be used in the regridding. The options are as follows:
+                'conserve'
+                'min'
+                'max'
+                'mean'
+                'median'
+                'mode'
+                'interp_or_mean'
+                'nearest_or_mode'
 
         Returns:
             str: Status of whether or not the dataset has been persisted to the HMI server.
@@ -88,6 +100,7 @@ class ClimateDataUtilityToolset:
             {
                 "dataset": dataset,
                 "target_resolution": target_resolution,
+                "aggregation": aggregation,
             },
         )
 
@@ -100,92 +113,6 @@ class ClimateDataUtilityToolset:
         )
 
         return result
-
-    @tool()
-    async def download_dataset(
-        self, uuid: str, agent: AgentRef, loop: LoopControllerRef, filename: Optional[str] = None
-    ) -> str:
-        """
-        This tool should be used to download a netcdf dataset from the HMI server.
-
-        Please ask the user for a filename, and if they don't give one let it default.
-
-        Args:
-            uuid (str): The uuid of the dataset to download. This is a uuid from the HMI server.
-            filename(Optional): This is the filename of the dataset to grab. Ask the user for this if they don't provide it. It will default to the {uuid}.nc.
-
-        Returns:
-            str: The filepath where the dataset is downloaded.
-        """
-
-        if filename is None:
-            filename = f"{uuid}.nc"
-
-        code = agent.context.get_code(
-            "hmi_dataset_download",
-            {
-                "id": uuid,
-                "filename": filename,
-            },
-        )
-
-        code_download = await agent.context.beaker_kernel.evaluate(
-            code,
-            parent_header={},
-        )
-
-        download_success = code_download.get("return")
-        loop.set_state(loop.STOP_SUCCESS)
-
-        return download_success
-
-    @tool()
-    async def save_dataset(self, dataset: str, new_dataset_filename: str, agent: AgentRef) -> None:
-        """
-        This tool should be used to save a netcdf dataset to the HMI server.
-
-        When you get a result from this tool, tell the user what the id of the newly created dataset is.
-
-        Args:
-            dataset (str): This is the variable in the jupyter kernel that the dataset is currently stored under.
-            new_dataset_filename (str): The filename to save the dataset as. This should be a string ending with the appropriate file suffix, e.x '.nc'.
-
-        """
-        create_code = agent.context.get_code(
-            "hmi_create_dataset",
-            {
-                "identifier": new_dataset_filename,
-            },
-        )
-        create_response = await agent.context.beaker_kernel.evaluate(
-            create_code,
-            parent_header={},
-        )
-
-        create_response_object = create_response.get("return")
-
-        if isinstance(create_response_object, str):
-            return create_response_object
-
-        id = create_response_object.get("id")
-
-        persist_code = agent.context.get_code(
-            "hmi_dataset_put",
-            {
-                "data": dataset,
-                "id": id,
-                "filename": f"{new_dataset_filename}",
-            },
-        )
-
-        result = await agent.context.beaker_kernel.evaluate(
-            persist_code,
-            parent_header={},
-        )
-
-        persist_status = result.get("return")
-
-        return {"dataset_create_status": create_response_object, "file_upload_status": persist_status}
 
     @tool()
     async def get_netcdf_plot(

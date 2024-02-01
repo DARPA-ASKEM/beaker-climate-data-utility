@@ -32,13 +32,11 @@ class ClimateDataUtilityContext(BaseContext):
         subkernel: "BaseSubkernel",
         config: Dict[str, Any],
     ) -> None:
-        logger.error("Starting ClimateDataUtilityContext init")
         if not isinstance(subkernel, PythonSubkernel):
             raise ValueError("This context is only valid for Python.")
         self.climate_data_utility__functions = {}
         self.config = config
         super().__init__(beaker_kernel, subkernel, self.agent_cls, config)
-        logger.error("ClimateDataUtilityContext initialized")
 
     async def auto_context(self):
         intro = f"""
@@ -59,16 +57,12 @@ class ClimateDataUtilityContext(BaseContext):
         """
         This is used to download a dataset from the HMI server.
         """
-        logger.error("In download_dataset_request")
 
         content = message.content
         uuid = content.get("uuid")
         filename = content.get("filename")
         if filename is None:
             filename = f"{uuid}.nc"
-
-        logger.error(f"content: {content}")
-        logger.error(f"uuid: {uuid}, filename: {filename}")
 
         code = self.get_code(
             "hmi_dataset_download",
@@ -78,25 +72,18 @@ class ClimateDataUtilityContext(BaseContext):
             },
         )
 
-        logger.error(f"code: {code}")
-
         code_download = await self.beaker_kernel.evaluate(
             code,
             parent_header={},
         )
 
-        logger.error(f"code_download: {code_download}")
-
         download_bytes = code_download.get("return")
-        logger.error(f"download_success: {download_bytes}")
-        self.beaker_kernel.send_response(
-            "iopub", "download_response", {"data": codecs.encode(download_bytes, "base64").decode()}
-        )
 
     @intercept()
     async def save_dataset_request(self, message):
         """
         This tool is used to save a dataset to the HMI server.
+        The 'dataset' argument is the variable name of the dataset to save in the notebook environment.
         """
 
         content = message.content

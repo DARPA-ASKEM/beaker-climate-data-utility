@@ -5,6 +5,8 @@ from json import JSONDecodeError
 
 import logging
 
+import xarray
+
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +40,6 @@ else:
     message
 
 
-dataset = response.content
+dataset = xarray.open_dataset(response.content)
 
 dataset

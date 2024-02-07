@@ -1,4 +1,5 @@
 import os
+from io import BytesIO
 import requests
 
 from json import JSONDecodeError
@@ -40,6 +41,6 @@ else:
     message
 
 
-dataset = xarray.open_dataset(response.content)
+dataset = xarray.open_dataset(BytesIO(response.content))
 
 dataset
